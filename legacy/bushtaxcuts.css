@@ -1,0 +1,142 @@
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    min-width: 900px;
+}
+
+.incometaxtitle {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 28px;
+}
+
+p {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+}
+
+small {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 11px;
+}
+
+big {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+.faded {
+    color: #444466;
+}
+
+.gradient {
+    padding: 0px;
+    background: url(gradient.jpg) repeat-x;
+    color: #fc2;
+    vertical-align: top;
+}
+
+.donationbanner {
+    height: 70px;
+    padding: 0px;
+    background-color: #234c8a;
+}
+
+.outputbox {
+    vertical-align: bottom;
+    text-align: right;
+    font-family: consolas,monaco,monospace;
+    width: 90%;
+    height: 110%;
+    font-size: 14px;
+}
+
+.donate {
+    font-size: 10px;
+}
+
+.beta {
+    font-size: 36px;
+    color: #FF0000
+}
+
+.scenarios {
+    font-size: 14px;
+}
+
+.instructions {
+    font-size: 15px;
+}
+
+.compare {
+    font-size: 14px;
+    color: #234C8A;
+	width:350px;
+	text-align:justify;
+	position:relative;
+}
+
+a:link {
+    color: #234C8A;
+}
+
+a:visited {
+    color: #000000;
+}
+
+.bubble {
+	background-image:url(bubble.gif);
+	width:140px;
+	height:30px;
+	text-align:center;
+	
+}
+
+.VisibleColumn {
+	display:visible;
+}
+
+.InvisibleColumn {
+	display:none;
+}
+
+/* Sortable tables */
+table.sortable thead {
+    background-color:#eee;
+    color:#000000;
+    font-weight: bold;
+    cursor: default;
+}
+
+			
+.graphLink {
+	cursor:pointer;
+	color:#234C8A;
+}
+
+.graphLink:hover {
+	text-decoration:underline;	
+}
+
+.inColumn {
+	background-color:#F1FFF1;
+	padding:2px;
+}
+
+.outColumn {
+	background-color:#FFF1F1;
+	padding:2px;
+}
+
+.netColumn {
+	background-color:#F1F1FF;
+	padding:2px;
+}
+
+
+.tableCellLine {
+	border-bottom:1px; 
+	border-bottom-color:#DCD9FF; 
+	border-bottom-style:solid;
+}
+

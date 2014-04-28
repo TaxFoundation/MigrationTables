@@ -1,0 +1,506 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Graph</title>
+        <link rel="stylesheet" type="text/css" href="bushtaxcuts.css" />
+    </head>
+    <body>
+        <div class="gradient" align="center" id="topbar" style="min-width:940px;">
+            <img src="MyTaxBurden.jpg" alt="My Tax Burden" /><a href="http://www.taxfoundation.org"><img src="TaxFoundation.jpg" alt="Tax Foundation" valign="top" border="0" /></a>
+        </div>
+        <div class="tabbackground" align="center" style="min-width:940px;">
+        </div>
+        <div id="contentArea" style="margin-left:auto;margin-right:auto;width:900px;">
+            <div style="font-size:18px;text-align:center;">
+                <b>Migration from <span id="inStateTitle"></span>to <span id="outStateTitle"></span></b>
+            </div>
+            <br/>
+            <table>
+                <tr>
+                    <td align="center" style="width:900px;">
+                        <table style="border-color:black; border-style:solid;">
+                            <tr>
+                                <td>
+                                    <div id="placeholder" style="width:600px;height:300px;">
+                                    </div>
+                                </td>
+                                <td valign='top'>
+                                    <table cellpadding = "2" cellspacing = "2" style="font-size:9px;">
+                                        <tr>
+                                            <td bgcolor="#090">
+                                                &nbsp; &nbsp; 
+                                            </td>
+                                            <td>
+                                                Immigration
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td bgcolor="#900">
+                                            </td>
+                                            <td>
+                                                Emmigration
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td bgcolor="#009">
+                                            </td>
+                                            <td>
+                                                Net Migration
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    Year
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td width="60px">
+                                                            <b>Year </b>
+                                                        </td>
+                                                        <td width="80px">
+                                                            <b><span id="stateAbrv1"></span>to <span id="stateAbrv2"></span></b>
+                                                        </td>
+                                                        <td width="80px">
+                                                            <b><span id="stateAbrv3"></span>to <span id="stateAbrv4"></span></b>
+                                                        </td>
+                                                        <td width="100px">
+                                                            <b>Net Migration </b>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            1994 
+                                                        </td>
+                                                        <td>
+                                                            <span id="1994Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1994Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1994Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            1995 
+                                                        </td>
+                                                        <td>
+                                                            <span id="1995Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1995Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1995Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            1996 
+                                                        </td>
+                                                        <td>
+                                                            <span id="1996Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1996Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1996Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            1997 
+                                                        </td>
+                                                        <td>
+                                                            <span id="1997Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1997Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1997Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            1998 
+                                                        </td>
+                                                        <td>
+                                                            <span id="1998Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1998Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1998Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            1999 
+                                                        </td>
+                                                        <td>
+                                                            <span id="1999Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1999Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="1999Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            2000 
+                                                        </td>
+                                                        <td>
+                                                            <span id="2000Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2000Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2000Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            2001 
+                                                        </td>
+                                                        <td>
+                                                            <span id="2001Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2001Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2001Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            2002 
+                                                        </td>
+                                                        <td>
+                                                            <span id="2002Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2002Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2002Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            2003 
+                                                        </td>
+                                                        <td>
+                                                            <span id="2003Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2003Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2003Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            2004 
+                                                        </td>
+                                                        <td>
+                                                            <span id="2004Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2004Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2004Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            2005 
+                                                        </td>
+                                                        <td>
+                                                            <span id="2005Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2005Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2005Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            2006 
+                                                        </td>
+                                                        <td>
+                                                            <span id="2006Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2006Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2006Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            2007 
+                                                        </td>
+                                                        <td>
+                                                            <span id="2007Im"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2007Em"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="2007Net"></span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="width:50px;">
+                                            </td>
+                                            <td valign="top" align="center">
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            State #1:
+                                                        </td>
+                                                        <td>
+                                                            <select name="state1select">
+                                                                <option name="Alabama" value="1">Alabama</option>
+                                                                <option name="Alaska" value="2">Alaska</option>
+                                                                <option name="Arizona" value="4">Arizona</option>
+                                                                <option name="Arkansas" value="5">Arkansas</option>
+                                                                <option name="California" value="6">California</option>
+                                                                <option name="Colorado" value="8">Colorado</option>
+                                                                <option name="Connecticut" value="9">Connecticut</option>
+                                                                <option name="Delaware" value="10">Delaware</option>
+                                                                <option name="District of Columbia" value = "11">District of Columbia</option>
+                                                                <option name="Florida" value="12">Florida</option>
+                                                                <option name="Georgia" value="13">Georgia</option>
+                                                                <option name="Hawaii" value="15">Hawaii</option>
+                                                                <option name="Idaho" value="16">Idaho</option>
+                                                                <option name="Illinois" value="17">Illinois</option>
+                                                                <option name="Indiana" value="18">Indiana</option>
+                                                                <option name="Iowa" value="19">Iowa</option>
+                                                                <option name="Kansas" value="20">Kansas</option>
+                                                                <option name="Kentucky" value="21">Kentucky</option>
+                                                                <option name="Louisiana" value="22">Louisiana</option>
+                                                                <option name="Maine" value="23">Maine</option>
+                                                                <option name="Maryland" value="24">Maryland</option>
+                                                                <option name="Massachusetts" value="25">Massachusetts</option>
+                                                                <option name="Michigan" value="26">Michigan</option>
+                                                                <option name="Minnesota" value="27">Minnesota</option>
+                                                                <option name="Mississippi" value="28">Mississippi</option>
+                                                                <option name="Missouri" value="29">Missouri</option>
+                                                                <option name="Montana" value="30">Montana</option>
+                                                                <option name="Nebraska" value="31">Nebraska</option>
+                                                                <option name="Nevada" value="32">Nevada</option>
+                                                                <option name="New Hampshire" value="33">New Hampshire</option>
+                                                                <option name="New Jersey" value="34">New Jersey</option>
+                                                                <option name="New York" value="35">New York</option>
+                                                                <option name="North Carolina" value="37">North Carolina</option>
+                                                                <option name="North Dakota" value = "38">North Dakota</option>
+                                                                <option name="Ohio" value="39">Ohio</option>
+                                                                <option name="Oklahoma" value="40">Oklahoma</option>
+                                                                <option name="Oregon" value="41">Oregon</option>
+                                                                <option name="Pennsylvania" value="42">Pennsylvania</option>
+                                                                <option name="Rhode Island" value="44">Rhode Island</option>
+                                                                <option name="South Carolina" value="45">South Carolina</option>
+                                                                <option name="South Dakota" value="46">South Dakota</option>
+                                                                <option name="Tennessee" value="47">Tennessee</option>
+                                                                <option name="Texas" value="48">Texas</option>
+                                                                <option name="Utah" value="49">Utah</option>
+                                                                <option name="Vermont" value="50">Vermont</option>
+                                                                <option name="Virginia" value="51">Virginia</option>
+                                                                <option name="Washington" value="52">Washington</option>
+                                                                <option name="West Virginia" value="54">West Virginia</option>
+                                                                <option name="Wisconsin" value="55">Wisconsin</option>
+                                                                <option name="Wyoming" value="56">Wyoming</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            State #2:
+                                                        </td>
+                                                        <td>
+                                                            <select name="state2select">
+                                                                <option name="Alabama" value="1">Alabama</option>
+                                                                <option name="Alaska" value="2">Alaska</option>
+                                                                <option name="Arizona" value="4">Arizona</option>
+                                                                <option name="Arkansas" value="5">Arkansas</option>
+                                                                <option name="California" value="6">California</option>
+                                                                <option name="Colorado" value="8">Colorado</option>
+                                                                <option name="Connecticut" value="9">Connecticut</option>
+                                                                <option name="Delaware" value="10">Delaware</option>
+                                                                <option name="District of Columbia" value = "11">District of Columbia</option>
+                                                                <option name="Florida" value="12">Florida</option>
+                                                                <option name="Georgia" value="13">Georgia</option>
+                                                                <option name="Hawaii" value="15">Hawaii</option>
+                                                                <option name="Idaho" value="16">Idaho</option>
+                                                                <option name="Illinois" value="17">Illinois</option>
+                                                                <option name="Indiana" value="18">Indiana</option>
+                                                                <option name="Iowa" value="19">Iowa</option>
+                                                                <option name="Kansas" value="20">Kansas</option>
+                                                                <option name="Kentucky" value="21">Kentucky</option>
+                                                                <option name="Louisiana" value="22">Louisiana</option>
+                                                                <option name="Maine" value="23">Maine</option>
+                                                                <option name="Maryland" value="24">Maryland</option>
+                                                                <option name="Massachusetts" value="25">Massachusetts</option>
+                                                                <option name="Michigan" value="26">Michigan</option>
+                                                                <option name="Minnesota" value="27">Minnesota</option>
+                                                                <option name="Mississippi" value="28">Mississippi</option>
+                                                                <option name="Missouri" value="29">Missouri</option>
+                                                                <option name="Montana" value="30">Montana</option>
+                                                                <option name="Nebraska" value="31">Nebraska</option>
+                                                                <option name="Nevada" value="32">Nevada</option>
+                                                                <option name="New Hampshire" value="33">New Hampshire</option>
+                                                                <option name="New Jersey" value="34">New Jersey</option>
+                                                                <option name="New York" value="35">New York</option>
+                                                                <option name="North Carolina" value="37">North Carolina</option>
+                                                                <option name="North Dakota" value = "38">North Dakota</option>
+                                                                <option name="Ohio" value="39">Ohio</option>
+                                                                <option name="Oklahoma" value="40">Oklahoma</option>
+                                                                <option name="Oregon" value="41">Oregon</option>
+                                                                <option name="Pennsylvania" value="42">Pennsylvania</option>
+                                                                <option name="Rhode Island" value="44">Rhode Island</option>
+                                                                <option name="South Carolina" value="45">South Carolina</option>
+                                                                <option name="South Dakota" value="46">South Dakota</option>
+                                                                <option name="Tennessee" value="47">Tennessee</option>
+                                                                <option name="Texas" value="48">Texas</option>
+                                                                <option name="Utah" value="49">Utah</option>
+                                                                <option name="Vermont" value="50">Vermont</option>
+                                                                <option name="Virginia" value="51">Virginia</option>
+                                                                <option name="Washington" value="52">Washington</option>
+                                                                <option name="West Virginia" value="54">West Virginia</option>
+                                                                <option name="Wisconsin" value="55">Wisconsin</option>
+                                                                <option name="Wyoming" value="56">Wyoming</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Start year:
+                                                        </td>
+                                                        <td>
+                                                            <select name="startYearSelect">
+                                                                <option name="1993" value="1993">1993</option>
+                                                                <option name="1994" value="1994">1994</option>
+                                                                <option name="1995" value="1995">1995</option>
+                                                                <option name="1996" value="1996">1996</option>
+                                                                <option name="1997" value="1997">1997</option>
+                                                                <option name="1998" value="1998">1998</option>
+                                                                <option name="1999" value="1999">1999</option>
+                                                                <option name="2000" value="2000">2000</option>
+                                                                <option name="2001" value="2001">2001</option>
+                                                                <option name="2002" value="2002">2002</option>
+                                                                <option name="2003" value="2003">2003</option>
+                                                                <option name="2004" value="2004">2004</option>
+                                                                <option name="2005" value="2005">2005</option>
+                                                                <option name="2006" value="2006">2006</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            End year:
+                                                        </td>
+                                                        <td>
+                                                            <select name="endYearSelect">
+                                                                <option name="1993" value="1993">1993</option>
+                                                                <option name="1994" value="1994">1994</option>
+                                                                <option name="1995" value="1995">1995</option>
+                                                                <option name="1996" value="1996">1996</option>
+                                                                <option name="1997" value="1997">1997</option>
+                                                                <option name="1998" value="1998">1998</option>
+                                                                <option name="1999" value="1999">1999</option>
+                                                                <option name="2000" value="2000">2000</option>
+                                                                <option name="2001" value="2001">2001</option>
+                                                                <option name="2002" value="2002">2002</option>
+                                                                <option name="2003" value="2003">2003</option>
+                                                                <option name="2004" value="2004">2004</option>
+                                                                <option name="2005" value="2005">2005</option>
+                                                                <option name="2006" value="2006">2006</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="right">
+                                                            Mode:
+                                                        </td>
+                                                        <td>
+                                                            <input type="radio" name="modeRadio" value="returns" disabled/>Returns
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            <input type="radio" name="modeRadio" value="exemptions" checked/>Exemptions
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            <input type="radio" name="modeRadio" value="agi" disabled/>AGI
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="choices" style="width:400px; height:200px;">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+    <script type="text/javascript" src="flot/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="flot/jquery.flot.min.js">
+    </script>
+    <script type="text/javascript">
+        
+        var inStateID = 8;
+        var outStateID = 56;
+        var mode = "exemptions";
+    </script>
+    <script type="text/javascript" src="MigrationGraph.js">
+    </script>
+    <script type="text/javascript">
+        StateCompare();
+    </script>
+</html>
