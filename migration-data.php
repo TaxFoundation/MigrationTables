@@ -8,7 +8,7 @@ $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
 // Set default values used in queries
 $endyear = 2011;
 $startyear = 2010;
-$state = "AL";
+$state = 1;
 
 // Discover the full range of years and reset defaults,
 // allows for updating of range year-to-year with new data.
@@ -65,17 +65,19 @@ $output['maxEndYear'] = $maxEndYear;
 $output['minStartYear'] = $minStartYear;
 
 // Add query results to single array for output
+// Variable names shortened to reduce data size
+// 'in' = Inflows, 'out' = Outflows, 'r' = Returns, 'e' = Exemptions
 while ($row = $inflowResult->fetch_array(MYSQLI_ASSOC)) {
 	// Set Inflow Data
-	$output[$state][$row['Year']]["inflows"][$row['OtherState']]["returns"] = $row['InflowReturns'];
-	$output[$state][$row['Year']]["inflows"][$row['OtherState']]["exemptions"] = $row['InflowExemptions'];
-	$output[$state][$row['Year']]["inflows"][$row['OtherState']]["agi"] = $row['InflowAGI'];
+	$output[$state][$row['OtherState']]["in"]["r"][$row['Year']] = $row['InflowReturns'];
+	$output[$state][$row['OtherState']]["in"]["e"][$row['Year']] = $row['InflowExemptions'];
+	$output[$state][$row['OtherState']]["in"]["agi"][$row['Year']] = $row['InflowAGI'];
 }
 while ($row = $outflowResult->fetch_array(MYSQLI_ASSOC)) {
 	// Set Outflow Data
-	$output[$state][$row['Year']]["outflows"][$row['State']]["returns"] = $row['InflowReturns'];
-	$output[$state][$row['Year']]["outflows"][$row['State']]["exemptions"] = $row['InflowExemptions'];
-	$output[$state][$row['Year']]["outflows"][$row['State']]["agi"] = $row['InflowAGI'];
+	$output[$state][$row['State']]["out"]["r"][$row['Year']] = $row['InflowReturns'];
+	$output[$state][$row['State']]["out"]["e"][$row['Year']] = $row['InflowExemptions'];
+	$output[$state][$row['State']]["out"]["agi"][$row['Year']] = $row['InflowAGI'];
 }
 
 // Echo results as JSON for use in browser
