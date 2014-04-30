@@ -123,6 +123,16 @@ function generateTable(q) {
 	});
 }
 
+// If someone chooses a start year after the end year, set the start year to 'endYear' -1. Take menu 'm' and year 'e'.
+function fixStart(m, e) {
+	for (var k = 0; k < m.options.length; k++) {
+		if (m.options[k].value == e - 1) {
+			m.options[k].selected = true;
+		}
+	}
+}
+// Continue here...
+
 // Update query variables and request new data when users change options, then generate new table
 function updateSelection() {
 	if (!yearMenus) {
@@ -131,6 +141,9 @@ function updateSelection() {
 	}
 	endYear = document.getElementById('end-year').value;
 	startYear = document.getElementById('start-year').value;
+	if (startYear >= endYear) {
+		fixStart(document.getElementById('start-year'), endYear);
+	}
 	state = document.getElementById('state').value;
 	flows = document.getElementsByName('flow');
 	for (var i = 0, length = flows.length; i < length; i++) {
