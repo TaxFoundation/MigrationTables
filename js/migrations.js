@@ -8,11 +8,11 @@ var yearMenus = false;
 
 // Get the data
 var defaultQuery = "migration-data.php?state=AL&endyear=2011&startyear=2010";
-var data = {};
+var initialData = {};
 d3.json(defaultQuery, function(error, d) {
 	if (error) { return console.warn(error); }
 	console.log(d);
-	data = d;
+	initialData = d;
 });
 
 // Take the flow type 'f' and state value 's' and return the correct table header
@@ -20,23 +20,23 @@ function generateHeadings(f, s) {
 	if (f == "in") {
 		return [
 		"Source State",
-		"Total # Returns Into " + stateNames[state].name,
-		"Total # Exemptions Into " + stateNames[state].name,
-		"Total AGI Into " + stateNames[state].name + " (thousands)"
+		"Total # Returns Into " + stateNames[s].name,
+		"Total # Exemptions Into " + stateNames[s].name,
+		"Total AGI Into " + stateNames[s].name + " (thousands)"
 		];
 	} else if (f == "out") {
 		return [
 		"Destination State",
-		"Total # Returns Out of " + stateNames[state].name,
-		"Total # Exemptions Out of " + stateNames[state].name,
-		"Total AGI Out of " + stateNames[state].name + " (thousands)"
+		"Total # Returns Out of " + stateNames[s].name,
+		"Total # Exemptions Out of " + stateNames[s].name,
+		"Total AGI Out of " + stateNames[s].name + " (thousands)"
 		];
 	} else {
 		return [
 		"Source State",
-		"Net # Returns Into " + stateNames[state].name,
-		"Net # Exemptions Into " + stateNames[state].name,
-		"Net AGI Into " + stateNames[state].name + " (thousands)"
+		"Net # Returns Into " + stateNames[s].name,
+		"Net # Exemptions Into " + stateNames[s].name,
+		"Net AGI Into " + stateNames[s].name + " (thousands)"
 		];
 	}
 }
@@ -126,7 +126,7 @@ function generateTable(q) {
 // Update query variables and request new data when users change options, then generate new table
 function updateSelection() {
 	if (!yearMenus) {
-		generateMenus(parseInt(data.minStartYear), parseInt(data.maxEndYear));
+		generateMenus(parseInt(initialData.minStartYear), parseInt(initialData.maxEndYear));
 		yearMenus = true;
 	}
 	endYear = document.getElementById('end-year').value;
