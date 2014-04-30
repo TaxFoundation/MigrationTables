@@ -4,6 +4,16 @@ var startYear = "";
 var state = "";
 var flow = "";
 var flows = "";
+var yearMenus = false;
+
+// Get the data
+var defaultQuery = "migration-data.php?state=AL&endyear=2011&startyear=2010";
+var data = {};
+d3.json(defaultQuery, function(error, d) {
+	if (error) { return console.warn(error); }
+	console.log(d);
+	data = d;
+});
 
 // Take the flow type 'f' and state value 's' and return the correct table header
 function generateHeadings(f, s) {
@@ -29,6 +39,31 @@ function generateHeadings(f, s) {
 		"Net AGI Into " + stateNames[state].name + " (thousands)"
 		];
 	}
+}
+
+// Generate the menus for selecting years using the lowest starting year 's' and highest ending year 'e'
+function generateMenus(s, e) {
+	var form = d3.select("#data-menu");
+
+	var end = form.insert("select", "#state")
+		.attr("id", "end-year")
+		.attr("onChange", "updateSelection();");
+	var ends = end.selectAll("option")
+		.data(d3.range(e,s,-1))
+	.enter()
+		.append("option")
+		.attr("value", function(d){return d;})
+		.text(function(d){return d;});
+
+	var start = form.insert("select", "#end-year")
+		.attr("id", "start-year")
+		.attr("onChange", "updateSelection();");
+	var starts = start.selectAll("option")
+		.data(d3.range(e-1,s-1,-1))
+	.enter()
+		.append("option")
+		.attr("value", function(d){return d;})
+		.text(function(d){return d;});
 }
 
 // Take the flow type 'f' and the JSON data 'd' per state and returns the correct data to display
@@ -90,6 +125,10 @@ function generateTable(q) {
 
 // Update query variables and request new data when users change options, then generate new table
 function updateSelection() {
+	if (!yearMenus) {
+		generateMenus(parseInt(data.minStartYear), parseInt(data.maxEndYear));
+		yearMenus = true;
+	}
 	endYear = document.getElementById('end-year').value;
 	startYear = document.getElementById('start-year').value;
 	state = document.getElementById('state').value;
