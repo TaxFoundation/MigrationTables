@@ -6,7 +6,7 @@ var flow = "";
 var flows = "";
 
 // Take the flow type 'f' and state value 's' and return the correct table header
-var generateHeadings = function(f, s) {
+function generateHeadings(f, s) {
 	if (f == "in") {
 		return [
 		"Source State",
@@ -29,54 +29,64 @@ var generateHeadings = function(f, s) {
 		"Net AGI Into " + stateNames[state].name + " (thousands)"
 		];
 	}
-};
+}
 
 // Take the flow type 'f' and the JSON data 'd' per state and returns the correct data to display
-var displayData = function(f, d) {
+function displayData(f, d) {
+	var results = [];
+	var n = "";
 	var r = 0;
 	var e = 0;
 	var agi = 0;
-	if (f != "net") {
-
-		for (var i in d[f].r) {
-			r += d[f].r[i];
-			e += d[f].e[i];
-			agi += d[f].agi[i];
+	for (var entry in d) {
+		n = stateNames[entry].name;
+		r = 0;
+		e = 0;
+		agi = 0;
+		if (f != "net") {
+			for (var i in d[entry][f].r) {
+				r += parseInt(d[entry][f].r[i]);
+				e += parseInt(d[entry][f].e[i]);
+				agi += parseInt(d[entry][f].agi[i]);
+			}
+		} else {
+			for (var j in d[entry].in.r) {
+				r += d[entry].in.r[j] - d[entry].out.r[j];
+				e += d[entry].in.e[j] - d[entry].out.e[j];
+				agi += d[entry].in.agi[j] - d[entry].out.agi[j];
+			}
 		}
-	} else {
-		for (var j in d.in.r) {
-			r += (d.in.r[j] - d.out.r[j]);
-			e += (d.in.e[j] - d.out.e[j]);
-			agi += (d.in.agi[j] - d.out.agi[j]);
-		}
+		results.push([n, r, e, agi]);
 	}
-	return [r, e, agi];
-};
+	return results;
+}
 
 // Generate the table from data
-var generateTable = function(q) {
+function generateTable(q) {
 	d3.json(q, function(error, data) {
 		if (error) { return console.warn(error); }
-		console.log(data);
-		d3.select(".section").remove();
 
-		// Bind out data to the table
-		var dataTable = d3.select("#data-table");
+		// Wipe away any old table data
+		d3.selectAll("tr").remove();
+
+		// Select the table
+		var table = d3.select("#data-table");
 
 		// Create our table header
-		var dataHeader = dataTable.append("thead").attr("class", "section").append("tr");
-		var headings = generateHeadings(flow, state);
-		for (var heading in headings) {
-			dataHeader.append("th").text(headings[heading]);
-		}
+		var thead = table.select("thead").append("tr");
+		var th = thead.selectAll("th")
+			.data(generateHeadings(flow, state))
+		.enter()
+			.append("th")
+			.text(function(d){return d;});
 
-		// var dataBody = dataTable.append("tbody").attr("class", "section")
-		// 	.data(data[state])
-		// .enter()
-			
-		// Continue here...
+		// Create our table body
+		var migrations = displayData(flow, data[state]);
+		var tbody = table.select("tbody");
+		var tr = tbody.selectAll("tr").data(migrations).enter().append("tr");
+		var td = tr.selectAll("td").data(function(d){return d;}).enter().append("td").text(function(d){return d;});
 	});
-};
+}
 
 // Update query variables and request new data when users change options, then generate new table
 function updateSelection() {
@@ -90,7 +100,6 @@ function updateSelection() {
 			break;
 		}
 	}
-	console.log(endYear + " " + startYear + " " + state + " " + flow);
 
 	query = "migration-data.php?state="+state+"&endyear="+endYear+"&startyear="+startYear;
 
