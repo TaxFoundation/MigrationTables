@@ -1,3 +1,9 @@
+/*
+Dynamically updating data table generator for IRS state migrations data.
+Written for the Tax Foundation by Tom VanAntwerp. [taxfoundation.org]
+Utilizing the D3.js framework by Mike Bostock. [d3js.org]
+*/
+
 // Declare variables for building the query, which is passed to migration-data.php through 'updateSelection'
 var endYear = "";
 var startYear = "";
@@ -45,21 +51,23 @@ function generateHeadings(f, s) {
 function generateMenus(s, e) {
 	var form = d3.select("#data-menu");
 
-	var end = form.insert("select", "#state")
+	// Created the menu for selecting the ending year
+	var end = form.insert("select", "#state") //Insert menu before state selection
 		.attr("id", "end-year")
 		.attr("onChange", "updateSelection();");
 	var ends = end.selectAll("option")
-		.data(d3.range(e,s,-1))
+		.data(d3.range(e,s,-1)) //Create year range from maximum ending year to the lowest starting year plus one
 	.enter()
 		.append("option")
 		.attr("value", function(d){return d;})
 		.text(function(d){return d;});
 
-	var start = form.insert("select", "#end-year")
+	// Create the menu for selecting the beginning year
+	var start = form.insert("select", "#end-year") //Insert menu before ending year selection
 		.attr("id", "start-year")
 		.attr("onChange", "updateSelection();");
 	var starts = start.selectAll("option")
-		.data(d3.range(e-1,s-1,-1))
+		.data(d3.range(e-1,s-1,-1)) //Create year range from maximum ending year minus one to the lowest starting year
 	.enter()
 		.append("option")
 		.attr("value", function(d){return d;})
@@ -68,31 +76,34 @@ function generateMenus(s, e) {
 
 // Take the flow type 'f' and the JSON data 'd' per state and returns the correct data to display
 function displayData(f, d) {
+	// Declare scoped variables
 	var results = [];
 	var n = "";
 	var r = 0;
 	var e = 0;
 	var agi = 0;
 	for (var entry in d) {
+		// Set the name for each state row, and zero-out values from previous calculations
 		n = stateNames[entry].name;
 		r = 0;
 		e = 0;
 		agi = 0;
-		if (f != "net") {
+		if (f != "net") { //Calculate net flows
 			for (var i in d[entry][f].r) {
 				r += parseInt(d[entry][f].r[i]);
 				e += parseInt(d[entry][f].e[i]);
 				agi += parseInt(d[entry][f].agi[i]);
 			}
-		} else {
+		} else { //Calculate specific flows, designated by 'f'
 			for (var j in d[entry].in.r) {
 				r += d[entry].in.r[j] - d[entry].out.r[j];
 				e += d[entry].in.e[j] - d[entry].out.e[j];
 				agi += d[entry].in.agi[j] - d[entry].out.agi[j];
 			}
 		}
-		results.push([n, r, e, agi]);
+		results.push([n, r, e, agi]); //Add each state row with name and values to results
 	}
+	console.log(results);
 	return results;
 }
 
@@ -118,12 +129,35 @@ function generateTable(q) {
 		// Create our table body
 		var migrations = displayData(flow, data[state]);
 		var tbody = table.select("tbody");
-		var tr = tbody.selectAll("tr").data(migrations).enter().append("tr");
-		var td = tr.selectAll("td").data(function(d){return d;}).enter().append("td").text(function(d){return d;});
+		var tr = tbody.selectAll("tr")
+			.data(migrations)
+		.enter()
+			.append("tr");
+		var td = tr.selectAll("td")
+			.data(function(d){return d;})
+		.enter()
+			.append("td")
+			.text(function(d){return d;});
+
+		// Add a row with totals at the bottom
+		var totals = tbody.append("tr");
+		totals.append("td").text("Totals");
+		var totalReturns = 0;
+		var totalExemptions = 0;
+		var totalAGI = 0;
+		for (var rows in migrations) {
+			totalReturns += migrations[rows][1];
+			totalExemptions += migrations[rows][2];
+			totalAGI += migrations[rows][3];
+		}
+		totals.append("td").text(totalReturns);
+		totals.append("td").text(totalExemptions);
+		totals.append("td").text(totalAGI);
 	});
 }
 
-// If someone chooses a start year after the end year, set the start year to 'endYear' -1. Take menu 'm' and year 'e'.
+// If someone chooses a start year after the end year, set the start year to 'endYear' -1.
+// Takes menu 'm' and end year 'e'.
 function fixStart(m, e) {
 	for (var k = 0; k < m.options.length; k++) {
 		if (m.options[k].value == e - 1) {
@@ -131,7 +165,6 @@ function fixStart(m, e) {
 		}
 	}
 }
-// Continue here...
 
 // Update query variables and request new data when users change options, then generate new table
 function updateSelection() {
@@ -158,6 +191,8 @@ function updateSelection() {
 	generateTable(query);
 }
 
+// Object containing the ANSI abbreviates and full names of the 50 US states plus DC.
+// Indexed according to numeric ANSI codes, hence the non-sequential numbering
 var stateNames = {
  1: {"ansi": "AL", "name": "Alabama"},
  2: {"ansi": "AK", "name": "Alaska"},
