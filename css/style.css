@@ -1,0 +1,107 @@
+body {
+    font-size: 12px;
+    font-family: sans-serif;
+}
+
+form {
+  margin-bottom: 10px;
+}
+
+select {
+    font-size: 11px;
+    padding:3px;
+    margin: 0 10px 5px 5px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-shadow: 0 3px 0 #aaa;
+    -moz-box-shadow: 0 3px 0 #aaa;
+    box-shadow: 0 3px 0 #aaa;
+    background: #ddd;
+    color:#000;
+    border:none;
+    outline:none;
+    display: inline-block;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+    cursor:pointer;
+}
+
+/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    select {padding-right:18px}
+}
+
+label {
+  position:relative;
+}
+label:after {
+    content:'<>';
+    font:10px "Consolas", monospace;
+    color:#333;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform:rotate(90deg);
+    right:20px; top:0px;
+    border-bottom:1px solid #aaa;
+    position:absolute;
+    pointer-events:none;
+}
+label:before {
+    content:'';
+    right:6px; top:0px;
+    height:15px;
+    background:#ddd;
+    position:absolute;
+    pointer-events:none;
+    display:block;
+}
+
+#end-year, #start-year {
+    width: 65px;
+}
+
+form {
+    text-align: center;
+}
+
+form, table {
+    width: 600px;
+}
+
+table {
+    border: 0;
+    border-spacing: 0;
+}
+
+tbody tr:nth-child(2n) {
+    background-color: #eee;
+}
+
+td {
+    padding: 3px 0 3px 20px;
+}
+
+th {
+    text-align: left;
+    padding: 3px 0 3px 20px;
+}
+
+.state-col {
+    width: 200px;
+}
+.returns-col {
+    width: 130px;
+}
+.exemptions-col {
+    width: 130px;
+}
+.agi-col {
+    width: 140px;
+}
+
+.totals {
+    background-color: #ccc !important;
+}

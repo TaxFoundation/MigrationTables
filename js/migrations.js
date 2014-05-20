@@ -6,20 +6,16 @@ Version 0.1.0
 */
 
 // Declare variables for building the query, which is passed to migration-data.php through 'updateSelection'
-var endYear = "";
-var startYear = "";
-var state = "";
-var flow = "";
+var endYear = 2011;
+var startYear = 2010;
+var state = 1;
+var flow = "net";
 var flows = "";
+var dollarFormat = d3.format("$,");
 
 // Get the data
-var defaultQuery = "migration-data.php?state=1&endyear=2011&startyear=2010";
-var initialData = {};
-d3.json(defaultQuery, function(error, d) {
-	if (error) { return console.warn(error); }
-	console.log(d);
-	initialData = d;
-});
+var query = "migration-data.php?state="+state+"&endyear="+endYear+"&startyear="+startYear;
+generateTable(query, true);
 
 // Take the flow type 'f' and state value 's' and return the correct table header
 function generateHeadings(f, s) {
@@ -52,7 +48,7 @@ function generateMenus(s, e) {
 	var form = d3.select("#data-menu");
 
 	// Created the menu for selecting the ending year
-	var end = form.insert("select", "#state") //Insert menu before state selection
+	var end = form.insert("label", ":first-child").html("Ending Year").append("select") //Insert menu before state selection
 		.attr("id", "end-year")
 		.attr("onChange", "updateSelection();");
 	var ends = end.selectAll("option")
@@ -63,7 +59,7 @@ function generateMenus(s, e) {
 		.text(function(d){return d;});
 
 	// Create the menu for selecting the beginning year
-	var start = form.insert("select", "#end-year") //Insert menu before ending year selection
+	var start = form.insert("label", ":first-child").html("Starting Year").append("select") //Insert menu before ending year selection
 		.attr("id", "start-year")
 		.attr("onChange", "updateSelection();");
 	var starts = start.selectAll("option")
@@ -107,10 +103,12 @@ function displayData(f, d) {
 }
 
 // Generate the table from data
-function generateTable(q) {
+function generateTable(q, m) {
 	d3.json(q, function(error, data) {
 		if (error) { return console.warn(error); }
-
+		if (m) {
+			generateMenus(parseInt(data.minStartYear), parseInt(data.maxEndYear));
+		}
 		// Wipe away any old table data
 		d3.selectAll("tr").remove();
 
@@ -133,13 +131,20 @@ function generateTable(q) {
 		.enter()
 			.append("tr");
 		var td = tr.selectAll("td")
-			.data(function(d){return d;})
+			.data(function(d){
+				var f = [];
+				f[0] = d[0];
+				f[1] = d[1];
+				f[2] = d[2];
+				f[3] = dollarFormat(d[3]);
+				return f;
+			})
 		.enter()
 			.append("td")
 			.text(function(d){return d;});
 
 		// Add a row with totals at the bottom
-		var totals = tbody.append("tr");
+		var totals = tbody.append("tr").attr("class", "totals");
 		totals.append("td").text("Totals");
 		var totalReturns = 0;
 		var totalExemptions = 0;
@@ -151,7 +156,7 @@ function generateTable(q) {
 		}
 		totals.append("td").text(totalReturns);
 		totals.append("td").text(totalExemptions);
-		totals.append("td").text(totalAGI);
+		totals.append("td").text(dollarFormat(totalAGI));
 	});
 }
 
@@ -167,28 +172,20 @@ function fixStart(m, e) {
 
 // Update query variables and request new data when users change options, then generate new table
 function updateSelection(yearMenus) {
-	console.log(yearMenus);
-	if (yearMenus) {
-		generateMenus(parseInt(initialData.minStartYear), parseInt(initialData.maxEndYear));
-		endYear = 2011;
-		startYear = 2010;
-		state = 1;
-		flow = "net";
-	} else {
-		endYear = document.getElementById('end-year').value;
-		startYear = document.getElementById('start-year').value;
-		if (startYear >= endYear) {
-			fixStart(document.getElementById('start-year'), endYear);
-		}
-		state = document.getElementById('state').value;
-		flows = document.getElementsByName('flow');
-		for (var i = 0, length = flows.length; i < length; i++) {
-			if (flows[i].checked) {
-				flow = flows[i].value;
-				break;
-			}
+	endYear = document.getElementById('end-year').value;
+	startYear = document.getElementById('start-year').value;
+	if (startYear >= endYear) {
+		fixStart(document.getElementById('start-year'), endYear);
+	}
+	state = document.getElementById('state').value;
+	flows = document.getElementsByName('flow');
+	for (var i = 0, length = flows.length; i < length; i++) {
+		if (flows[i].checked) {
+			flow = flows[i].value;
+			break;
 		}
 	}
+
 
 	query = "migration-data.php?state="+state+"&endyear="+endYear+"&startyear="+startYear;
 
