@@ -2,6 +2,7 @@
 Dynamically updating data table generator for IRS state migrations data.
 Written for the Tax Foundation by Tom VanAntwerp. [taxfoundation.org]
 Utilizing the D3.js framework by Mike Bostock. [d3js.org]
+Version 0.1.0
 */
 
 // Declare variables for building the query, which is passed to migration-data.php through 'updateSelection'
@@ -10,10 +11,9 @@ var startYear = "";
 var state = "";
 var flow = "";
 var flows = "";
-var yearMenus = false;
 
 // Get the data
-var defaultQuery = "migration-data.php?state=AL&endyear=2011&startyear=2010";
+var defaultQuery = "migration-data.php?state=1&endyear=2011&startyear=2010";
 var initialData = {};
 d3.json(defaultQuery, function(error, d) {
 	if (error) { return console.warn(error); }
@@ -76,7 +76,7 @@ function generateMenus(s, e) {
 
 // Take the flow type 'f' and the JSON data 'd' per state and returns the correct data to display
 function displayData(f, d) {
-	// Declare scoped variables
+	// Declare scoped variables: 'n' for name, 'r' for returns, 'e' for exemptions, 'agi' for...well, AGI.
 	var results = [];
 	var n = "";
 	var r = 0;
@@ -88,13 +88,13 @@ function displayData(f, d) {
 		r = 0;
 		e = 0;
 		agi = 0;
-		if (f != "net") { //Calculate net flows
+		if (f != "net") { //Calculate specific flows, designated by 'f'
 			for (var i in d[entry][f].r) {
 				r += parseInt(d[entry][f].r[i]);
 				e += parseInt(d[entry][f].e[i]);
 				agi += parseInt(d[entry][f].agi[i]);
 			}
-		} else { //Calculate specific flows, designated by 'f'
+		} else { //Calculate net flows
 			for (var j in d[entry].in.r) {
 				r += d[entry].in.r[j] - d[entry].out.r[j];
 				e += d[entry].in.e[j] - d[entry].out.e[j];
@@ -103,7 +103,6 @@ function displayData(f, d) {
 		}
 		results.push([n, r, e, agi]); //Add each state row with name and values to results
 	}
-	console.log(results);
 	return results;
 }
 
@@ -167,22 +166,27 @@ function fixStart(m, e) {
 }
 
 // Update query variables and request new data when users change options, then generate new table
-function updateSelection() {
-	if (!yearMenus) {
+function updateSelection(yearMenus) {
+	console.log(yearMenus);
+	if (yearMenus) {
 		generateMenus(parseInt(initialData.minStartYear), parseInt(initialData.maxEndYear));
-		yearMenus = true;
-	}
-	endYear = document.getElementById('end-year').value;
-	startYear = document.getElementById('start-year').value;
-	if (startYear >= endYear) {
-		fixStart(document.getElementById('start-year'), endYear);
-	}
-	state = document.getElementById('state').value;
-	flows = document.getElementsByName('flow');
-	for (var i = 0, length = flows.length; i < length; i++) {
-		if (flows[i].checked) {
-			flow = flows[i].value;
-			break;
+		endYear = 2011;
+		startYear = 2010;
+		state = 1;
+		flow = "net";
+	} else {
+		endYear = document.getElementById('end-year').value;
+		startYear = document.getElementById('start-year').value;
+		if (startYear >= endYear) {
+			fixStart(document.getElementById('start-year'), endYear);
+		}
+		state = document.getElementById('state').value;
+		flows = document.getElementsByName('flow');
+		for (var i = 0, length = flows.length; i < length; i++) {
+			if (flows[i].checked) {
+				flow = flows[i].value;
+				break;
+			}
 		}
 	}
 
