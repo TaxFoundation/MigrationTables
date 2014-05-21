@@ -1,8 +1,9 @@
 /*
-Dynamically updating data table generator for IRS state migrations data.
-Written for the Tax Foundation by Tom VanAntwerp. [taxfoundation.org]
+Dynamically updating data table generator for IRS US population migration data.
+Data source: [http://www.irs.gov/uac/SOI-Tax-Stats-Migration-Data]
+Written for the Tax Foundation [taxfoundation.org] by Tom VanAntwerp [tomvanantwerp.com].
 Utilizing the D3.js framework by Mike Bostock. [d3js.org]
-Version 0.1.0
+Version 0.1.1
 */
 
 // Declare variables for building the query, which is passed to migration-data.php through 'updateSelection'
@@ -24,21 +25,21 @@ function generateHeadings(f, s) {
 		"Source State",
 		"Total # Returns Into " + stateNames[s].name,
 		"Total # Exemptions Into " + stateNames[s].name,
-		"Total AGI Into " + stateNames[s].name + " (thousands)"
+		"Total AGI Into " + stateNames[s].name
 		];
 	} else if (f == "out") {
 		return [
 		"Destination State",
 		"Total # Returns Out of " + stateNames[s].name,
 		"Total # Exemptions Out of " + stateNames[s].name,
-		"Total AGI Out of " + stateNames[s].name + " (thousands)"
+		"Total AGI Out of " + stateNames[s].name
 		];
 	} else {
 		return [
 		"Source State",
 		"Net # Returns Into " + stateNames[s].name,
 		"Net # Exemptions Into " + stateNames[s].name,
-		"Net AGI Into " + stateNames[s].name + " (thousands)"
+		"Net AGI Into " + stateNames[s].name
 		];
 	}
 }
@@ -48,7 +49,7 @@ function generateMenus(s, e) {
 	var form = d3.select("#data-menu");
 
 	// Created the menu for selecting the ending year
-	var end = form.insert("label", ":first-child").html("Ending Year").append("select") //Insert menu before state selection
+	var end = form.insert("label", ":first-child").html("<strong>Ending Year</strong>").append("select") //Insert menu before state selection
 		.attr("id", "end-year")
 		.attr("onChange", "updateSelection();");
 	var ends = end.selectAll("option")
@@ -59,7 +60,7 @@ function generateMenus(s, e) {
 		.text(function(d){return d;});
 
 	// Create the menu for selecting the beginning year
-	var start = form.insert("label", ":first-child").html("Starting Year").append("select") //Insert menu before ending year selection
+	var start = form.insert("label", ":first-child").html("<strong>Starting Year</strong>").append("select") //Insert menu before ending year selection
 		.attr("id", "start-year")
 		.attr("onChange", "updateSelection();");
 	var starts = start.selectAll("option")
@@ -97,7 +98,7 @@ function displayData(f, d) {
 				agi += d[entry].in.agi[j] - d[entry].out.agi[j];
 			}
 		}
-		results.push([n, r, e, agi]); //Add each state row with name and values to results
+		results.push([n, r, e, agi*1000]); //Add each state row with name and values to results
 	}
 	return results;
 }
@@ -131,6 +132,9 @@ function generateTable(q, m) {
 		.enter()
 			.append("tr");
 		var td = tr.selectAll("td")
+			// We set the data as a new array 'f' so we can format the values without changing the raw data
+			// By doing this, the 'migrations' variable is still available for calculations and results
+			// appear as dollar values.
 			.data(function(d){
 				var f = [];
 				f[0] = d[0];
@@ -152,11 +156,15 @@ function generateTable(q, m) {
 		for (var rows in migrations) {
 			totalReturns += migrations[rows][1];
 			totalExemptions += migrations[rows][2];
-			totalAGI += migrations[rows][3];
+			totalAGI += (migrations[rows][3]);
 		}
 		totals.append("td").text(totalReturns);
 		totals.append("td").text(totalExemptions);
 		totals.append("td").text(dollarFormat(totalAGI));
+
+		d3.select("#csvDownload")
+		.attr("href", encodeURI(createCSV(migrations,flow,state,startYear,endYear)))
+		.attr("download", flow + "-migration-for-" + stateNames[state].name + "-" + startYear + "-" + endYear + ".csv");
 	});
 }
 
@@ -186,10 +194,31 @@ function updateSelection(yearMenus) {
 		}
 	}
 
-
 	query = "migration-data.php?state="+state+"&endyear="+endYear+"&startyear="+startYear;
 
 	generateTable(query);
+}
+
+// Convert data in array-of-arrays format to CSV format
+function createCSV(data, f, s, y1, y2) {
+	var content = "data:text/csv;charset=utf-8,";
+	var title = capitalize(f) + " Migration for " + stateNames[s].name + " from " + y1 + " to " + y2 + ",,";
+	var header = "Returns,Exemptions,AGI";
+	var row = title + "\n" + header;
+	content += row;
+
+	for (var i = 0; i < data.length; i++) {
+		row = data[i].join(",");
+		content += "\n" + row;
+	}
+
+	content += "\nData Compiled by the Tax Foundation,,";
+
+	return content;
+}
+
+function capitalize(s) {
+	return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 // Object containing the ANSI abbreviates and full names of the 50 US states plus DC.

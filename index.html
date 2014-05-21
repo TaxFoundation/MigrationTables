@@ -10,7 +10,7 @@
     </head>
     <body>
     <form id="data-menu">
-        <label>State
+        <label><strong>State</strong>
           <select id="state" onChange="updateSelection();">
             <option value="1">Alabama</option>
             <option value="2">Alaska</option>
@@ -66,9 +66,11 @@
           </select>
       </label>
       <br />
-      <input type="radio" name="flow" value="in" onClick="updateSelection();">Inflows
-      <input type="radio" name="flow" value="out" onClick="updateSelection();">Outflows
-      <input type="radio" name="flow" value="net" onClick="updateSelection();" checked>Net Flows
+      <strong>Type of Migration:</strong>
+      <input type="radio" name="flow" value="in" onClick="updateSelection();">Migration In
+      <input type="radio" name="flow" value="out" onClick="updateSelection();">Migration Out
+      <input type="radio" name="flow" value="net" onClick="updateSelection();" checked>Net Migration
+      <a id="csvDownload">Download CSV</a>
     </form>
 
     <table id="data-table">
