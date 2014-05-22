@@ -20,12 +20,11 @@ var format = {
 
 // Get the data
 var query = "migration-data.php?state="+state+"&endyear="+endYear+"&startyear="+startYear;
-generateTable(query, state, flow, startYear, endYear, true);
+generateTable(query, state, flow, startYear, endYear, inflationAdjustment, true);
 
 // Take the flow type 'f' and state value 's' and return the correct table header
 function generateHeadings(f, s) {
-
-	if (s === 0) {
+	if (s < 1) {
 		if (f == "in") {
 			return [
 			"State",
@@ -102,7 +101,7 @@ function generateMenus(s, e) {
 }
 
 // Take the flow type 'f' and the JSON data 'd' per state and returns the correct data to display
-function displayData(f, d) {
+function displayData(f, inflation, d) {
 	// Declare scoped variables: 'n' for name, 'r' for returns, 'e' for exemptions, 'agi' for...well, AGI.
 	var results = [];
 	var n = "";
@@ -115,34 +114,34 @@ function displayData(f, d) {
 		r = 0;
 		e = 0;
 		agi = 0;
-		if (f != "net" && entry > 0) { //Calculate specific flows, designated by 'f'
+		if (f != "net") { //Calculate specific flows, designated by 'f'
 			for (var i in d[entry][f].r) {
 				r += parseInt(d[entry][f].r[i]);
 				e += parseInt(d[entry][f].e[i]);
-				if (inflationAdjustment) {
-					agi += parseInt(d[entry][f].agi[i] * inflationMultipliers[i]);
+				if (inflation) {
+					agi += Math.round(d[entry][f].agi[i] * inflationMultipliers[i] * 1000);
 				} else {
-					agi += parseInt(d[entry][f].agi[i]);
+					agi += parseInt(d[entry][f].agi[i]) * 1000;
 				}
 			}
-		} else if (entry > 0) { //Calculate net flows
+		} else { //Calculate net flows
 			for (var j in d[entry].in.r) {
 				r += d[entry].in.r[j] - d[entry].out.r[j];
 				e += d[entry].in.e[j] - d[entry].out.e[j];
-				if (inflationAdjustment) {
-					agi += (d[entry].in.agi[j] - d[entry].out.agi[j]) * inflationMultipliers[j];
+				if (inflation) {
+					agi += Math.round((d[entry].in.agi[j] - d[entry].out.agi[j]) * inflationMultipliers[j] * 1000);
 				} else {
-					agi += d[entry].in.agi[j] - d[entry].out.agi[j];
+					agi += (d[entry].in.agi[j] - d[entry].out.agi[j]) * 1000;
 				}
 			}
 		}
-		if (entry > 0) results.push([n, r, e, Math.round(agi*1000)]); //Add each state row with name and values to results
+		if (entry > 0) results.push([n, r, e, agi]); //Add each state row with name and values to results
 	}
 	return results;
 }
 
 // Generate the table from data
-function generateTable(q, s, f, y1, y2, m) {
+function generateTable(q, s, f, y1, y2, i, m) {
 	d3.json(q, function(error, data) {
 		if (error) { return console.warn(error); }
 		if (m) {
@@ -163,7 +162,7 @@ function generateTable(q, s, f, y1, y2, m) {
 			.text(function(d){return d;});
 
 		// Create our table body
-		var migrations = displayData(f, data[s]);
+		var migrations = displayData(f, i, data[s]);
 		var tbody = table.select("tbody");
 		var tr = tbody.selectAll("tr")
 			.data(migrations)
@@ -240,7 +239,7 @@ function updateSelection(yearMenus) {
 
 	query = "migration-data.php?state="+state+"&endyear="+endYear+"&startyear="+startYear;
 
-	generateTable(query, state, flow, startYear, endYear);
+	generateTable(query, state, flow, startYear, endYear, inflationAdjustment);
 }
 
 // Convert data in array-of-arrays format to CSV format
