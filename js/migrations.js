@@ -9,9 +9,10 @@ Version 0.1.1
 // Declare variables for building the query, which is passed to migration-data.php through 'updateSelection'
 var endYear = 2011;
 var startYear = 2010;
-var state = 1;
+var state = 0;
 var flow = "net";
 var flows = "";
+var inflationAdjustment = true;
 var dollarFormat = d3.format("$,");
 
 // Get the data
@@ -85,20 +86,29 @@ function displayData(f, d) {
 		r = 0;
 		e = 0;
 		agi = 0;
-		if (f != "net") { //Calculate specific flows, designated by 'f'
+		console.log(entry);
+		if (f != "net" && entry > 0) { //Calculate specific flows, designated by 'f'
 			for (var i in d[entry][f].r) {
 				r += parseInt(d[entry][f].r[i]);
 				e += parseInt(d[entry][f].e[i]);
-				agi += parseInt(d[entry][f].agi[i]);
+				if (inflationAdjustment) {
+					agi += parseInt(d[entry][f].agi[i] * inflationMultipliers[i]);
+				} else {
+					agi += parseInt(d[entry][f].agi[i]);
+				}
 			}
-		} else { //Calculate net flows
+		} else if (entry > 0) { //Calculate net flows
 			for (var j in d[entry].in.r) {
 				r += d[entry].in.r[j] - d[entry].out.r[j];
 				e += d[entry].in.e[j] - d[entry].out.e[j];
-				agi += d[entry].in.agi[j] - d[entry].out.agi[j];
+				if (inflationAdjustment) {
+					agi += (d[entry].in.agi[j] - d[entry].out.agi[j]) * inflationMultipliers[j];
+				} else {
+					agi += d[entry].in.agi[j] - d[entry].out.agi[j];
+				}
 			}
 		}
-		results.push([n, r, e, agi*1000]); //Add each state row with name and values to results
+		if (entry > 0) results.push([n, r, e, Math.round(agi*1000)]); //Add each state row with name and values to results
 	}
 	return results;
 }
@@ -193,6 +203,11 @@ function updateSelection(yearMenus) {
 			break;
 		}
 	}
+	if (document.getElementById('inflation-adjustment').checked) {
+		inflationAdjustment = true;
+	} else {
+		inflationAdjustment = false;
+	}
 
 	query = "migration-data.php?state="+state+"&endyear="+endYear+"&startyear="+startYear;
 
@@ -202,8 +217,8 @@ function updateSelection(yearMenus) {
 // Convert data in array-of-arrays format to CSV format
 function createCSV(data, f, s, y1, y2) {
 	var content = "data:text/csv;charset=utf-8,";
-	var title = capitalize(f) + " Migration for " + stateNames[s].name + " from " + y1 + " to " + y2 + ",,";
-	var header = "Returns,Exemptions,AGI";
+	var title = capitalize(f) + " Migration for " + stateNames[s].name + " from " + y1 + " to " + y2 + ",,,";
+	var header = "State,Returns,Exemptions,AGI";
 	var row = title + "\n" + header;
 	content += row;
 
@@ -212,7 +227,7 @@ function createCSV(data, f, s, y1, y2) {
 		content += "\n" + row;
 	}
 
-	content += "\nData Compiled by the Tax Foundation,,";
+	content += "\nData Compiled by the Tax Foundation,,,";
 
 	return content;
 }
@@ -221,9 +236,36 @@ function capitalize(s) {
 	return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+// Figures to multiply raw data by to adjust for inflation.
+// Tax Foundation defaults to CPI-U, all urban consumers,
+// alternate series, not seasonally adjusted from the BLS.
+var inflationMultipliers = {
+	1992: 1.60318344,
+	1993: 1.557240582,
+	1994: 1.517608108,
+	1995: 1.476052574,
+	1996: 1.433960417,
+	1997: 1.401451747,
+	1998: 1.379926275,
+	1999: 1.350336673,
+	2000: 1.306355176,
+	2001: 1.270395928,
+	2002: 1.2505902,
+	2003: 1.22267828,
+	2004: 1.190911983,
+	2005: 1.151825641,
+	2006: 1.115777447,
+	2007: 1.084867961,
+	2008: 1.044758439,
+	2009: 1.048486131,
+	2010: 1.031567764,
+	2011: 1
+};
+
 // Object containing the ANSI abbreviates and full names of the 50 US states plus DC.
 // Indexed according to numeric ANSI codes, hence the non-sequential numbering
 var stateNames = {
+ 0: {"ansi": "All","name": "All States"},
  1: {"ansi": "AL", "name": "Alabama"},
  2: {"ansi": "AK", "name": "Alaska"},
  4: {"ansi": "AZ", "name": "Arizona"},

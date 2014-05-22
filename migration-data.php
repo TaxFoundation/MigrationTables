@@ -8,7 +8,7 @@ $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
 // Set default values used in queries
 $endyear = 2011;
 $startyear = 2010;
-$state = 1;
+$state = 0;
 
 // Discover the full range of years and reset defaults,
 // allows for updating of range year-to-year with new data.
@@ -17,7 +17,7 @@ $state = 1;
 // so data ending in 2010 is changed from 2009 (the beginning).
 // Beginning years are not recorded in the data, so the -1 fixes that.
 $findYears = "SELECT `Year` FROM " . DB_DATABASE . "." . DB_TABLE . "
-			WHERE `State` = '" . $state . "' AND `OtherState` = '" . $state . "'
+			WHERE `State` = '1' AND `OtherState` = '1'
 			ORDER BY `Year`";
 $findYearsResult = $mysqli->query($findYears);
 $maxEndYear = 2011;
