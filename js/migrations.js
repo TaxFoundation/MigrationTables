@@ -13,35 +13,64 @@ var state = 0;
 var flow = "net";
 var flows = "";
 var inflationAdjustment = true;
-var dollarFormat = d3.format("$,");
+var format = {
+	"dollar": d3.format("$,"),
+	"number": d3.format(",")
+};
 
 // Get the data
 var query = "migration-data.php?state="+state+"&endyear="+endYear+"&startyear="+startYear;
-generateTable(query, true);
+generateTable(query, state, flow, startYear, endYear, true);
 
 // Take the flow type 'f' and state value 's' and return the correct table header
 function generateHeadings(f, s) {
-	if (f == "in") {
-		return [
-		"Source State",
-		"Total # Returns Into " + stateNames[s].name,
-		"Total # Exemptions Into " + stateNames[s].name,
-		"Total AGI Into " + stateNames[s].name
-		];
-	} else if (f == "out") {
-		return [
-		"Destination State",
-		"Total # Returns Out of " + stateNames[s].name,
-		"Total # Exemptions Out of " + stateNames[s].name,
-		"Total AGI Out of " + stateNames[s].name
-		];
+
+	if (s === 0) {
+		if (f == "in") {
+			return [
+			"State",
+			"Total # Returns Into State",
+			"Total # Exemptions Into State",
+			"Total AGI Into State"
+			];
+		} else if (f == "out") {
+			return [
+			"State",
+			"Total # Returns Out of State",
+			"Total # Exemptions Out of State",
+			"Total AGI Out of State"
+			];
+		} else {
+			return [
+			"State",
+			"Net # Returns Into State",
+			"Net # Exemptions Into State",
+			"Net AGI Into State"
+			];
+		}
 	} else {
-		return [
-		"Source State",
-		"Net # Returns Into " + stateNames[s].name,
-		"Net # Exemptions Into " + stateNames[s].name,
-		"Net AGI Into " + stateNames[s].name
-		];
+		if (f == "in") {
+			return [
+			"Source State",
+			"Total # Returns Into " + stateNames[s].name,
+			"Total # Exemptions Into " + stateNames[s].name,
+			"Total AGI Into " + stateNames[s].name
+			];
+		} else if (f == "out") {
+			return [
+			"Destination State",
+			"Total # Returns Out of " + stateNames[s].name,
+			"Total # Exemptions Out of " + stateNames[s].name,
+			"Total AGI Out of " + stateNames[s].name
+			];
+		} else {
+			return [
+			"Source State",
+			"Net # Returns Into " + stateNames[s].name,
+			"Net # Exemptions Into " + stateNames[s].name,
+			"Net AGI Into " + stateNames[s].name
+			];
+		}
 	}
 }
 
@@ -86,7 +115,6 @@ function displayData(f, d) {
 		r = 0;
 		e = 0;
 		agi = 0;
-		console.log(entry);
 		if (f != "net" && entry > 0) { //Calculate specific flows, designated by 'f'
 			for (var i in d[entry][f].r) {
 				r += parseInt(d[entry][f].r[i]);
@@ -114,7 +142,7 @@ function displayData(f, d) {
 }
 
 // Generate the table from data
-function generateTable(q, m) {
+function generateTable(q, s, f, y1, y2, m) {
 	d3.json(q, function(error, data) {
 		if (error) { return console.warn(error); }
 		if (m) {
@@ -129,13 +157,13 @@ function generateTable(q, m) {
 		// Create our table header
 		var thead = table.select("thead").append("tr");
 		var th = thead.selectAll("th")
-			.data(generateHeadings(flow, state))
+			.data(generateHeadings(f, s))
 		.enter()
 			.append("th")
 			.text(function(d){return d;});
 
 		// Create our table body
-		var migrations = displayData(flow, data[state]);
+		var migrations = displayData(f, data[s]);
 		var tbody = table.select("tbody");
 		var tr = tbody.selectAll("tr")
 			.data(migrations)
@@ -143,14 +171,13 @@ function generateTable(q, m) {
 			.append("tr");
 		var td = tr.selectAll("td")
 			// We set the data as a new array 'f' so we can format the values without changing the raw data
-			// By doing this, the 'migrations' variable is still available for calculations and results
-			// appear as dollar values.
+			// By doing this, the 'migrations' variable is still available for calculations.
 			.data(function(d){
 				var f = [];
 				f[0] = d[0];
-				f[1] = d[1];
-				f[2] = d[2];
-				f[3] = dollarFormat(d[3]);
+				f[1] = format.number(d[1]);
+				f[2] = format.number(d[2]);
+				f[3] = format.dollar(d[3]);
 				return f;
 			})
 		.enter()
@@ -159,22 +186,24 @@ function generateTable(q, m) {
 
 		// Add a row with totals at the bottom
 		var totals = tbody.append("tr").attr("class", "totals");
-		totals.append("td").text("Totals");
+		totals.append("td").text("Total Migration");
 		var totalReturns = 0;
 		var totalExemptions = 0;
 		var totalAGI = 0;
 		for (var rows in migrations) {
-			totalReturns += migrations[rows][1];
-			totalExemptions += migrations[rows][2];
-			totalAGI += (migrations[rows][3]);
+			if (migrations[rows][0] !== stateNames[s].name) {
+				totalReturns += migrations[rows][1];
+				totalExemptions += migrations[rows][2];
+				totalAGI += (migrations[rows][3]);
+			}
 		}
-		totals.append("td").text(totalReturns);
-		totals.append("td").text(totalExemptions);
-		totals.append("td").text(dollarFormat(totalAGI));
+		totals.append("td").text(format.number(totalReturns));
+		totals.append("td").text(format.number(totalExemptions));
+		totals.append("td").text(format.dollar(totalAGI));
 
 		d3.select("#csvDownload")
-		.attr("href", encodeURI(createCSV(migrations,flow,state,startYear,endYear)))
-		.attr("download", flow + "-migration-for-" + stateNames[state].name + "-" + startYear + "-" + endYear + ".csv");
+		.attr("href", encodeURI(createCSV(migrations,f,s,y1,y2)))
+		.attr("download", f + "-migration-for-" + stateNames[s].name + "-" + y1 + "-" + y2 + ".csv");
 	});
 }
 
@@ -211,7 +240,7 @@ function updateSelection(yearMenus) {
 
 	query = "migration-data.php?state="+state+"&endyear="+endYear+"&startyear="+startYear;
 
-	generateTable(query);
+	generateTable(query, state, flow, startYear, endYear);
 }
 
 // Convert data in array-of-arrays format to CSV format
