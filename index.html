@@ -73,7 +73,7 @@
       <input type="radio" name="flow" value="net" onClick="updateSelection();" checked>Net Migration
       <input type="checkbox" name="inflation-adjustment" id="inflation-adjustment" onClick="updateSelection();" checked>Adjust for Inflation (2011 Dollars)
       <br />
-      <a id="csvDownload">Download Current Data</a>
+      <a id="csvDownload">Download Current Data as CSV*</a>
     </form>
 
     <table id="data-table">
@@ -86,6 +86,8 @@
       <thead></thead>
       <tbody></tbody>
     </table>
+
+    <p>*Note: Download feature may not be fully compatible with all web browsers.</p>
 
     <script src="js/vendor/d3.v3.min.js"></script>
     <script src="js/migrations.js"></script>

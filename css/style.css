@@ -22,9 +22,9 @@ select, #csvDownload {
     border:none;
     outline:none;
     display: inline-block;
-    -webkit-appearance:none;
+/*    -webkit-appearance:none;
     -moz-appearance:none;
-    appearance:none;
+    appearance:none;*/
     cursor:pointer;
     text-decoration: none;
 }
@@ -37,7 +37,7 @@ select, #csvDownload {
 label {
   position:relative;
 }
-label:after {
+/*label:after {
     content:'<>';
     font:10px "Consolas", monospace;
     color:#333;
@@ -50,7 +50,8 @@ label:after {
     position:absolute;
     pointer-events:none;
 }
-label:before {
+*/
+/*label:before {
     content:'';
     right:6px; top:0px;
     height:15px;
@@ -58,10 +59,10 @@ label:before {
     position:absolute;
     pointer-events:none;
     display:block;
-}
+}*/
 
 #end-year, #start-year {
-    width: 65px;
+    width: 75px;
 }
 
 form {

@@ -201,8 +201,8 @@ function generateTable(q, s, f, y1, y2, i, m) {
 		totals.append("td").text(format.dollar(totalAGI));
 
 		d3.select("#csvDownload")
-		.attr("href", encodeURI(createCSV(migrations,f,s,y1,y2)))
-		.attr("download", f + "-migration-for-" + stateNames[s].name + "-" + y1 + "-" + y2 + ".csv");
+		.attr("download", f + "-migration-for-" + stateNames[s].name + "-" + y1 + "-" + y2 + ".csv")
+		.attr("href", encodeURI(createCSV(migrations,f,s,y1,y2)));
 	});
 }
 
@@ -244,7 +244,7 @@ function updateSelection(yearMenus) {
 
 // Convert data in array-of-arrays format to CSV format
 function createCSV(data, f, s, y1, y2) {
-	var content = "data:text/csv;charset=utf-8,";
+	var content = "data:application/csv;charset=utf-8,";
 	var title = capitalize(f) + " Migration for " + stateNames[s].name + " from " + y1 + " to " + y2 + ",,,";
 	var header = "State,Returns,Exemptions,AGI";
 	var row = title + "\n" + header;
