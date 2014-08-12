@@ -217,5 +217,4 @@ pip-log.txt
 # Excel data sources
 *.xls
 *.xlsx
-data/source/
-data/final.csv
+data/
